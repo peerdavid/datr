@@ -41,15 +41,15 @@ ubuntu:~/Dev/datr$ python datr.py car,red 10 9
 Downloading images with tags 'car,red'
 License type set to 9
 
-Downloading image | Title = '20150524_133712LC' | License = 9
-Downloading image | Title = 'Under the Hood' | License = 9
-Downloading image | Title = '1935 Auburn 851 S/C Boattail Speedster' | License = 9
-Downloading image | Title = '1931 Cadillac' | License = 9
-Downloading image | Title = 'Zoom' | License = 9
-Downloading image | Title = 'rusty car 2' | License = 9
-Downloading image | Title = 'rusty car 1' | License = 9
-Downloading image | Title = 'DSC00249' | License = 9
-Downloading image | Title = 'River bank ahead' | License = 9
+Downloading image #1 | Title = '20150524_133712LC' | License = 9
+Downloading image #2 | Title = 'Under the Hood' | License = 9
+Downloading image #3 | Title = '1935 Auburn 851 S/C Boattail Speedster' | License = 9
+Downloading image #4 | Title = '1931 Cadillac' | License = 9
+Downloading image #5 | Title = 'Zoom' | License = 9
+Downloading image #6 | Title = 'rusty car 2' | License = 9
+Downloading image #7 | Title = 'rusty car 1' | License = 9
+Downloading image #8 | Title = 'DSC00249' | License = 9
+Downloading image #9 | Title = 'River bank ahead' | License = 9
 
 Done.
 Downloaded 10 images. 
