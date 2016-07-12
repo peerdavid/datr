@@ -1,7 +1,7 @@
 # datr
-Download data sets from flickr for given tags
+Download data sets from flickr for given tags.
 
-## How to use it
+## Installation
 1. ```git clone https://github.com/peerdavid/datr/```
 2. Register on flickr and create an application: https://www.flickr.com/services/apps/create/apply/
 3. Copy the new API_Key and API_SECRET.
@@ -10,4 +10,8 @@ Download data sets from flickr for given tags
 API_KEY =  'YOUR_KEY'
 API_SECRET = 'YOUR_SECRET'
 ```
-5. ```# python datr.py car 20 ```
+
+## Execute
+```# python datr.py car,red 20 ```
+
+The command will download 20 images with the tags car && red.
