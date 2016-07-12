@@ -12,6 +12,9 @@ API_SECRET = 'YOUR_SECRET'
 ```
 
 ## Execute
+The following command will download 20 images with the tags car && red.
 ```# python datr.py car,red 20 ```
 
-The command will download 20 images with the tags car && red.
+
+## Thanks to
+https://github.com/alexis-mignon/python-flickr-api
