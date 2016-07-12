@@ -12,7 +12,7 @@ API_SECRET = 'YOUR_SECRET'
 ```
 
 ## Execute
-``` Bash
+```
 Usage: python datr.py [tags] [num_images] [license]
 Download a data set from flickr for given tags. All tags will be combined with AND.
   [tags]                A comma-delimited list of tags. Photos with one or more
@@ -36,7 +36,7 @@ Download a data set from flickr for given tags. All tags will be combined with A
 
 ### Example
 The following command will download 10 images of red cars with Public Domain Dedication (CC0) license.<br>
-``` Bash
+```
 ubuntu:~/Dev/datr$ python datr.py car,red 10 9
 Downloading images with tags 'car,red'
 License type set to 9
