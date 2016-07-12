@@ -13,46 +13,38 @@ API_SECRET = 'YOUR_SECRET'
 
 ## Execute
 ```
-Usage: python datr.py [tags] [num_images] [license]
-Download a data set from flickr for given tags. All tags will be combined with AND.
-  [tags]                A comma-delimited list of tags. Photos with one or more
-                        of the tags listed will be returned. You can exclude 
-                        results that match a term by prepending it
-                        with a - character.
-  [num_images]          Max. num of images to download
-  (optional)[license]   Select the license of the images:
-                           0 - All Rights Reserved
-                           4 - Attribution License
-                           6 - Attribution-NoDerivs License
-                           3 - Attribution-NonCommercial-NoDerivs License
-                           2 - Attribution-NonCommercial License
-                           1 - Attribution-NonCommercial-ShareAlike License
-                           5 - Attribution-ShareAlike License
-                           7 - No known copyright restrictions
-                           8 - United States Government Work
-                           9 - Public Domain Dedication (CC0)
-                          10 - Public Domain Mark 
+Usage: datr.py [options]
+Options:
+  -h, --help            show this help message and exit
+  -s SEARCH_TAGS, --search_tags=SEARCH_TAGS
+                        A comma-delimited list of tags. Photos with one or
+                        moreof the tags listed will be returned. You can
+                        exclude results that match a term by prepending itwith
+                        a - character.
+  -t NUM_THREADS, --num_threads=NUM_THREADS
+                        Number of downloader threads (speed up download)
+  -p PATH, --path=PATH  Path where downloaded files should be saved
+  -n NUM_IMG, --num_images=NUM_IMG
+                        Max. number of images to download
 ```
 
 ### Example
-The following command will download 10 images of red cars with Public Domain Dedication (CC0) license.<br>
+The following command will download 50 (Public Domain Dedication (CC0) license) images of cars. 
+To speed up the download we start 20 downloader threads.<br>
+
 ```
-ubuntu:~/Dev/datr$ python datr.py car,red 10 9
-Downloading images with tags 'car,red'
-License type set to 9
+user@ubuntu:~/Dev/datr$ python datr.py --num_images 50 --search_tags car --license 9 --num_threads 20
+Starting 20 downloader threads
+Downloading images for search tags car and license 9.
 
-Downloading image #1 | Title = '20150524_133712LC' | License = 9
-Downloading image #2 | Title = 'Under the Hood' | License = 9
-Downloading image #3 | Title = '1935 Auburn 851 S/C Boattail Speedster' | License = 9
-Downloading image #4 | Title = '1931 Cadillac' | License = 9
-Downloading image #5 | Title = 'Zoom' | License = 9
-Downloading image #6 | Title = 'rusty car 2' | License = 9
-Downloading image #7 | Title = 'rusty car 1' | License = 9
-Downloading image #8 | Title = 'DSC00249' | License = 9
-Downloading image #9 | Title = 'River bank ahead' | License = 9
+Downloaded image download/28048280xxx.jpg | Title = '...' | License = 9
+Downloaded image download/28152122xxx.jpg | Title = '...' | License = 9
+Downloaded image download/27870814xxx.jpg | Title = '...' | License = 9
+[...]
+Downloaded image download/28048283xxx.jpg | Title = '...' | License = 9
 
-Done.
-Downloaded 10 images. 
+Finished image download after 6.88 sec.
+
 ```
 
 ## Thanks to
