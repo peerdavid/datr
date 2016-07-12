@@ -13,8 +13,18 @@ API_SECRET = 'YOUR_SECRET'
 
 ## Execute
 The following command will download 20 images with the tags car && red.<br>
-```# python datr.py car,red 20 ```
-
+``` Bash
+ubuntu:~/Dev/datr$ python datr.py car,red 20
+Removing all files from directory download/
+Downloading images for car,red
+Downloading image Look at that Caddilac
+Downloading image March Chevy 84G IMSA GTP (1984)
+Downloading image Steamer
+[...] 
+  
+Done.  
+Downloaded 20 images. 
+```
 
 ## Thanks to
 https://github.com/alexis-mignon/python-flickr-api
