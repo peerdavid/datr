@@ -12,7 +12,7 @@ API_SECRET = 'YOUR_SECRET'
 ```
 
 ## Execute
-The following command will download 20 images with the tags car && red.
+The following command will download 20 images with the tags car && red.<br>
 ```# python datr.py car,red 20 ```
 
 
