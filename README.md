@@ -25,6 +25,13 @@ Download a data set from flickr for given tags. All tags will be combined with A
                            4 - Attribution License
                            6 - Attribution-NoDerivs License
                            3 - Attribution-NonCommercial-NoDerivs License
+                           2 - Attribution-NonCommercial License
+                           1 - Attribution-NonCommercial-ShareAlike License
+                           5 - Attribution-ShareAlike License
+                           7 - No known copyright restrictions
+                           8 - United States Government Work
+                           9 - Public Domain Dedication (CC0)
+                          10 - Public Domain Mark 
 ```
 
 ### Example
