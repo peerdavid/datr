@@ -7,7 +7,7 @@
 			"request": "launch",
 			"stopOnEntry": true,
 			"program": "${file}",
-			"args": ["-n", "50", "-s", "car"],
+			"args": ["-n", "50", "-s", "car,cat", "-l", "9"],
 			//"args":["-h"],
 			"debugOptions": [
 				"WaitOnAbnormalExit",

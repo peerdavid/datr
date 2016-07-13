@@ -1,5 +1,5 @@
 # datr
-Download data sets from flickr for given tags.
+Download image sets from flickr -> create your own training set for machine learning tasks etc.
 
 ## Configuration
 1. ```git clone https://github.com/peerdavid/datr/```
