@@ -69,7 +69,6 @@ def init_downloader_threads(worker_queue, options):
 #
 # Download images from queue until prog. finished
 #
-failed_img = 0
 def download_image(worker_queue, options):
     while True:
         try:
@@ -77,7 +76,6 @@ def download_image(worker_queue, options):
             urllib.urlretrieve(img.url_s, options.path + "/" + img.id+ ".jpg")
             save_print("Downloaded image {0}/{1}.jpg | Title = '{2}' | License = {3}".format(options.path, img.id, img.title, img.license))
         except Exception, e:
-            failed_img += 1
             sys.stderr.write("Could not download image {0}/{1}.jpg | {2}".format(options.path, img.id, e))
         finally:
             worker_queue.task_done()   
@@ -111,8 +109,6 @@ def wait_for_downloader_threads(worker_queue):
 # MAIN
 #    
 try :
-    start_time = time.time()
-
     # Init
     options = parse_cmd_args()
     worker_queue = Queue(options.max_num_img + 1)
@@ -120,16 +116,17 @@ try :
     init_downloader_threads(worker_queue, options)
 
     # Fill and wait for queue
+    start_time = time.time()
     num_img = fill_worker_queue_with_images(worker_queue, options)   
+    print "Filled downloader queue with {0} images.".format(num_img)
+    
+    # Wait until all images downloaded
     wait_for_downloader_threads(worker_queue)
+    end_time = time.time()
 
     # Print result
-    end_time = time.time()
-    print ""
-    if num_img < options.max_num_img:
-        print "There are not {0} images available.".format(options.max_num_img)
-    print "Finished image download after {0:.2f} sec.".format(end_time - start_time)
-    print "Successfully downloaded {0} images. Failed {1} image downloads.\n".format(num_img - failed_img, failed_img)   
+    print "\nFinished image download after {0:.2f} sec.".format(end_time - start_time)
+    print "Successfully downloaded {0} images.\n".format(num_img)   
        
 except SystemExit:
     print ""
