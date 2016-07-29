@@ -1,7 +1,7 @@
 # datr
 Download image sets from flickr -> create your own training set for machine learning tasks etc.
 
-## Configuration
+## Usage
 1. ```git clone https://github.com/peerdavid/datr/```
 2. Register on flickr and create an application: https://www.flickr.com/services/apps/create/apply/
 3. Copy the new API_Key and API_SECRET.
