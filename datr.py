@@ -24,6 +24,8 @@ def _parse_cmd_args():
                         "of the tags listed will be returned. You can exclude " +
                         "results that match a term by prepending it" +
                         "with a - character.")
+    parser.add_option("-f", "--use-free-text", dest="use_free_text", action="store_true",
+                    help="Use free text search, if not enough images are available")
     parser.add_option("-t", "--num_threads", dest="num_threads", action="store", type="int",
                     help="Number of downloader threads (speed up download)", default=20)
     parser.add_option("-p", "--path", dest="path", action="store",
@@ -83,8 +85,8 @@ def _save_print(content):
     print "{0}\n".format(content),
    
     
-def _fill_worker_queue_with_images(worker_queue, search_tags, license, max_num_img):
-    print "Downloading images for search tags {0} and license {1}.\n".format(search_tags, license)
+def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img):
+    print "Downloading images for search tags {0} and license {1}.".format(search_tags, license)
     walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_s', license=license, sort='interestingness-desc')
     
     # Insert all images into worker queue
@@ -95,7 +97,25 @@ def _fill_worker_queue_with_images(worker_queue, search_tags, license, max_num_i
             break;
         worker_queue.put(img)
         num_img += 1
-        
+    
+    print "Filled downloader queue with {0} tagged images.\n".format(num_img)
+    return num_img
+
+
+def _fill_worker_queue_with_free_text_images(worker_queue, search_text, license, max_num_img):
+    print "Downloading images for free text {0} and license {1}.".format(search_text, license)
+    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_s', license=license, sort='interestingness-desc')
+    
+    # Insert all images into worker queue
+    # Note: Loop finished if no more images on flickr or > max_num_img
+    num_img = 0
+    for img in walker:       
+        if num_img >= max_num_img:
+            break;
+        worker_queue.put(img)
+        num_img += 1
+    
+    print "Filled downloader queue with {0} free text images.\n".format(num_img)
     return num_img
         
         
@@ -103,12 +123,13 @@ def _wait_for_downloader_threads(worker_queue):
     worker_queue.join()
         
 
-def download_images_from_flickr(path, search_tags, license="", max_num_img=100, num_threads=15):
+def download_images_from_flickr(path, search_tags, use_free_text=False, license="", max_num_img=100, num_threads=15):
     """ Download images from flickr. Needs a flickr_keys.py file in your execution path.
 
     Args:
         path: Download all images into this path
         search_tags: Search for images in flick, which are tagged with the given, comma-delimited list, of tags
+        use_free_text: Use free text search, if not enough images are available
         license: Download only images of given type.
         max_num_img: Max. number of images to download
         num_threads: Number of downloader threads
@@ -123,8 +144,11 @@ def download_images_from_flickr(path, search_tags, license="", max_num_img=100, 
 
         # Fill and wait for queue
         start_time = time.time()
-        num_img = _fill_worker_queue_with_images(worker_queue, search_tags, license, max_num_img)   
-        print "Filled downloader queue with {0} images.".format(num_img)
+        num_img = _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img)  
+
+        # If there are not enough tagged img, use free text to download
+        if use_free_text and num_img < max_num_img: 
+            num_img += _fill_worker_queue_with_free_text_images(worker_queue, search_tags, license, max_num_img - num_img)
         
         # Wait until all images downloaded
         _wait_for_downloader_threads(worker_queue)
@@ -152,6 +176,7 @@ if __name__ == '__main__':
     download_images_from_flickr(
         options.path,
         options.search_tags,
+        options.use_free_text,
         options.license,
         options.max_num_img,
         options.num_threads
