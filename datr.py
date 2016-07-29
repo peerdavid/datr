@@ -103,7 +103,7 @@ def _wait_for_downloader_threads(worker_queue):
     worker_queue.join()
         
 
-def download_images_from_flickr(path, search_tags, license, max_num_img=100, num_threads=15):
+def download_images_from_flickr(path, search_tags, license="", max_num_img=100, num_threads=15):
     """ Download images from flickr. Needs a flickr_keys.py file in your execution path.
 
     Args:
