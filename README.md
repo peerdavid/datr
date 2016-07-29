@@ -14,6 +14,7 @@ API_SECRET = 'YOUR_SECRET'
 ## Execute
 ```
 Usage: datr.py [options]
+
 Options:
   -h, --help            show this help message and exit
   -s SEARCH_TAGS, --search_tags=SEARCH_TAGS
@@ -21,15 +22,26 @@ Options:
                         moreof the tags listed will be returned. You can
                         exclude results that match a term by prepending itwith
                         a - character.
+  -f, --use-free-text   Use free text search, if not enough images are
+                        available
   -t NUM_THREADS, --num_threads=NUM_THREADS
                         Number of downloader threads (speed up download)
   -p PATH, --path=PATH  Path where downloaded files should be saved
-  -n NUM_IMG, --num_images=NUM_IMG
+  -n MAX_NUM_IMG, --num_images=MAX_NUM_IMG
                         Max. number of images to download
+  -l LICENSE, --license=LICENSE
+                        License of images. 0=All Rights Reserved,
+                        4=Attribution License, 6=Attribution-NoDerivs License,
+                        3=Attribution-NonCommercial-NoDerivs License, 2
+                        =Attribution-NonCommercial License, 1=Attribution-
+                        NonCommercial-ShareAlike License, 5=Attribution-
+                        ShareAlike License, 7=No known copyright restrictions,
+                        8=United States Government Work, 9=Public Domain
+                        Dedication (CC0) 10=Public Domain Mark
 ```
 
 ### Example
-The following command will download 50 (Public Domain Dedication (CC0) license) images of cars. 
+The following command will download 50 (Public Domain Dedication (CC0) license) images tagged with 'car'. 
 To speed up the download we start 20 downloader threads.<br>
 
 ```
