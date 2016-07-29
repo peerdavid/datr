@@ -87,7 +87,7 @@ def _save_print(content):
     
 def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img):
     print "Downloading images for search tags {0} and license {1}.".format(search_tags, license)
-    walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_s', license=license, sort='interestingness-desc')
+    walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_s', license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
@@ -104,7 +104,7 @@ def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, ma
 
 def _fill_worker_queue_with_free_text_images(worker_queue, search_text, license, max_num_img):
     print "Downloading images for free text {0} and license {1}.".format(search_text, license)
-    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_s', license=license, sort='interestingness-desc')
+    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_s', license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
