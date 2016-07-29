@@ -2,59 +2,14 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Python",
+			"name": "datr.py",
 			"type": "python",
 			"request": "launch",
 			"stopOnEntry": true,
-			"program": "${file}",
+			"program": "${workspaceRoot}/datr.py",
 			"args": ["-n", "50", "-s", "car,cat", "-l", "9"],
+			"pythonPath": "/usr/bin/python2",
 			//"args":["-h"],
-			"debugOptions": [
-				"WaitOnAbnormalExit",
-				"WaitOnNormalExit",
-				"RedirectOutput"
-			]
-		},
-		{
-			"name": "Python Console App",
-			"type": "python",
-			"request": "launch",
-			"stopOnEntry": true,
-			"program": "${file}",
-			"externalConsole": true,
-			"debugOptions": [
-				"WaitOnAbnormalExit",
-				"WaitOnNormalExit"
-			]
-		},
-		{
-			"name": "Django",
-			"type": "python",
-			"request": "launch",
-			"stopOnEntry": true,
-			"program": "${workspaceRoot}/manage.py",
-			"args": [
-				"runserver",
-				"--noreload"
-			],
-			"debugOptions": [
-				"WaitOnAbnormalExit",
-				"WaitOnNormalExit",
-				"RedirectOutput",
-				"DjangoDebugging"
-			]
-		},
-		{
-			"name": "Watson",
-			"type": "python",
-			"request": "launch",
-			"stopOnEntry": true,
-			"program": "${workspaceRoot}/console.py",
-			"args": [
-				"dev",
-				"runserver",
-				"--noreload=True"
-			],
 			"debugOptions": [
 				"WaitOnAbnormalExit",
 				"WaitOnNormalExit",

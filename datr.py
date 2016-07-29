@@ -17,7 +17,7 @@ from optparse import OptionParser
 import time
 
 
-def parse_cmd_args():
+def _parse_cmd_args():
     parser = OptionParser()
     parser.add_option("-s", "--search_tags", dest="search_tags", action="store",
                     help="A comma-delimited list of tags. Photos with one or more" +
@@ -50,7 +50,7 @@ def parse_cmd_args():
 #
 # Remove all files in download folder and create it if it does not exist
 #  
-def init_download_folder(options):
+def _init_download_folder(options):
     os.popen('rm -r ' + options.path)
     os.popen('mkdir ' + options.path)
     
@@ -58,10 +58,10 @@ def init_download_folder(options):
 #
 # Init threads which will download our images
 #
-def init_downloader_threads(worker_queue, options):
+def _init_downloader_threads(worker_queue, options):
     print "Starting {0} downloader threads".format(options.num_threads)
     for i in range(options.num_threads):
-        worker = Thread(target=download_image, args=(worker_queue, options))
+        worker = Thread(target=_download_image, args=(worker_queue, options))
         worker.setDaemon(True)
         worker.start()
         
@@ -69,23 +69,23 @@ def init_downloader_threads(worker_queue, options):
 #
 # Download images from queue until prog. finished
 #
-def download_image(worker_queue, options):
+def _download_image(worker_queue, options):
     while True:
         try:
             img = worker_queue.get()
             urllib.urlretrieve(img.url_s, options.path + "/" + img.id+ ".jpg")
-            save_print("Downloaded image {0}/{1}.jpg | Title = '{2}' | License = {3}".format(options.path, img.id, img.title, img.license))
+            _save_print("Downloaded image {0}/{1}.jpg | Title = '{2}' | License = {3}".format(options.path, img.id, img.title, img.license))
         except Exception, e:
             sys.stderr.write("Could not download image {0}/{1}.jpg | {2}".format(options.path, img.id, e))
         finally:
             worker_queue.task_done()   
             
             
-def save_print(content):
+def _save_print(content):
     print "{0}\n".format(content),
    
     
-def fill_worker_queue_with_images(worker_queue, options):
+def _fill_worker_queue_with_images(worker_queue, options):
     print "Downloading images for search tags {0} and license {1}.\n".format(options.search_tags, options.license)
     walker = Walker(f.Photo.search, tags=options.search_tags, tag_mode='all', extras='url_s', license=options.license, sort='interestingness-desc')
     
@@ -101,35 +101,40 @@ def fill_worker_queue_with_images(worker_queue, options):
     return num_img
         
         
-def wait_for_downloader_threads(worker_queue):
+def _wait_for_downloader_threads(worker_queue):
     worker_queue.join()
         
         
 #
 # MAIN
 #    
-try :
-    # Init
-    options = parse_cmd_args()
-    worker_queue = Queue(options.max_num_img + 1)
-    init_download_folder(options)
-    init_downloader_threads(worker_queue, options)
+def main():
+    try :
+        # Init
+        options = _parse_cmd_args()
+        worker_queue = Queue(options.max_num_img + 1)
+        _init_download_folder(options)
+        _init_downloader_threads(worker_queue, options)
 
-    # Fill and wait for queue
-    start_time = time.time()
-    num_img = fill_worker_queue_with_images(worker_queue, options)   
-    print "Filled downloader queue with {0} images.".format(num_img)
-    
-    # Wait until all images downloaded
-    wait_for_downloader_threads(worker_queue)
-    end_time = time.time()
+        # Fill and wait for queue
+        start_time = time.time()
+        num_img = _fill_worker_queue_with_images(worker_queue, options)   
+        print "Filled downloader queue with {0} images.".format(num_img)
+        
+        # Wait until all images downloaded
+        _wait_for_downloader_threads(worker_queue)
+        end_time = time.time()
 
-    # Print result
-    print "\nFinished image download after {0:.2f} sec.".format(end_time - start_time)
-    print "Successfully downloaded {0} images.\n".format(num_img)   
-       
-except SystemExit:
-    print ""
-    
-except Exception, e:
-    sys.stderr.write("An unexpected error occured: {0}".format(e))
+        # Print result
+        print "\nFinished image download after {0:.2f} sec.".format(end_time - start_time)
+        print "Successfully downloaded {0} images.\n".format(num_img)   
+        
+    except SystemExit:
+        print ""
+        
+    except Exception, e:
+        sys.stderr.write("An unexpected error occured: {0}".format(e))
+
+
+if __name__ == '__main__':
+    main()
