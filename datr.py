@@ -58,8 +58,9 @@ def _parse_cmd_args():
 def _init_download_folder(path):
     """ Remove all files in download folder and create it if it does not exist
     """
-    os.popen('rm -r ' + path)
-    os.popen('mkdir ' + path)
+
+    if not os.path.exists(path):
+        os.popen('mkdir ' + path)
     
     
 def _init_downloader_threads(worker_queue, path, image_size, num_threads):
