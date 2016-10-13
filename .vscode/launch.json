@@ -5,9 +5,9 @@
 			"name": "datr.py",
 			"type": "python",
 			"request": "launch",
-			"stopOnEntry": true,
+			"stopOnEntry": false,
 			"program": "${workspaceRoot}/datr.py",
-			"args": ["-n", "50", "-s", "car cool", "-f"],
+			"args": ["-n", "50", "-s", "car cool", "-f", "-i", "l"],
 			"pythonPath": "/usr/bin/python2",
 			//"args":["-h"],
 			"debugOptions": [

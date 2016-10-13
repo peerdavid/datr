@@ -32,6 +32,11 @@ def _parse_cmd_args():
                     help="Path where downloaded files should be saved", default="download")
     parser.add_option("-n", "--num_images", dest="max_num_img", action="store", type="int",
                     help="Max. number of images to download", default=100)
+    parser.add_option("-i", "--image_size", dest="image_size", action="store", default="s",
+                    help="Size of images. \n" +
+                         "s=Small, " + 
+                         "m=Medium, " + 
+                         "l=Large")
     parser.add_option("-l", "--license", dest="license", action="store", default="",
                     help="License of images.\n" +
                             "0=All Rights Reserved, " + 
@@ -57,23 +62,23 @@ def _init_download_folder(path):
     os.popen('mkdir ' + path)
     
     
-def _init_downloader_threads(worker_queue, path, num_threads):
+def _init_downloader_threads(worker_queue, path, image_size, num_threads):
     """ Init threads which will download our images
     """
     print "Starting {0} downloader threads".format(num_threads)
     for i in range(num_threads):
-        worker = Thread(target=_download_image, args=(worker_queue, path))
+        worker = Thread(target=_download_image, args=(worker_queue, path, image_size))
         worker.setDaemon(True)
         worker.start()
         
         
-def _download_image(worker_queue, path):
+def _download_image(worker_queue, path, image_size):
     """  Download images from queue. Executed by one single thread.
     """
     while True:
         try:
             img = worker_queue.get()
-            urllib.urlretrieve(img.url_s, path + "/" + img.id+ ".jpg")
+            urllib.urlretrieve(img["url_"+image_size], path + "/" + img.id+ ".jpg")
             _save_print("Downloaded image {0}/{1}.jpg | Title = '{2}' | License = {3}".format(path, img.id, img.title, img.license))
         except Exception, e:
             sys.stderr.write("Could not download image {0}/{1}.jpg | {2}".format(path, img.id, e))
@@ -85,9 +90,9 @@ def _save_print(content):
     print "{0}\n".format(content),
    
     
-def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img):
+def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img, image_size):
     print "Downloading images for search tags {0} and license {1}.".format(search_tags, license)
-    walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_s', license=license, sort='relevance')
+    walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
@@ -102,9 +107,9 @@ def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, ma
     return num_img
 
 
-def _fill_worker_queue_with_free_text_images(worker_queue, search_text, license, max_num_img):
+def _fill_worker_queue_with_free_text_images(worker_queue, search_text, license, max_num_img, image_size):
     print "Downloading images for free text {0} and license {1}.".format(search_text, license)
-    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_s', license=license, sort='relevance')
+    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
@@ -123,7 +128,7 @@ def _wait_for_downloader_threads(worker_queue):
     worker_queue.join()
         
 
-def download_images_from_flickr(path, search_tags, use_free_text=False, license="", max_num_img=100, num_threads=15):
+def download_images_from_flickr(path, search_tags, use_free_text=False, license="", max_num_img=100, num_threads=15, image_size="s"):
     """ Download images from flickr. Needs a flickr_keys.py file in your execution path.
 
     Args:
@@ -140,15 +145,15 @@ def download_images_from_flickr(path, search_tags, use_free_text=False, license=
     try :
         worker_queue = Queue(max_num_img + 1)
         _init_download_folder(path)
-        _init_downloader_threads(worker_queue, path, num_threads)
+        _init_downloader_threads(worker_queue, path, image_size, num_threads)
 
         # Fill and wait for queue
         start_time = time.time()
-        num_img = _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img)  
+        num_img = _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img, image_size)  
 
         # If there are not enough tagged img, use free text to download
         if use_free_text and num_img < max_num_img: 
-            num_img += _fill_worker_queue_with_free_text_images(worker_queue, search_tags, license, max_num_img - num_img)
+            num_img += _fill_worker_queue_with_free_text_images(worker_queue, search_tags, license, max_num_img - num_img, image_size)
         
         # Wait until all images downloaded
         _wait_for_downloader_threads(worker_queue)
@@ -179,5 +184,6 @@ if __name__ == '__main__':
         options.use_free_text,
         options.license,
         options.max_num_img,
-        options.num_threads
+        options.num_threads,
+        options.image_size
     )

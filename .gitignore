@@ -1,3 +1,4 @@
 flickr_keys.*
 download/
+*.pyc
 browse.VC.db
