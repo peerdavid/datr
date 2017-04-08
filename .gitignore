@@ -2,3 +2,6 @@ flickr_keys.*
 download/
 *.pyc
 browse.VC.db
+dist
+datr.egg-info
+build

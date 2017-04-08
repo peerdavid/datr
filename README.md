@@ -1,6 +1,7 @@
 # datr
 Download image sets from flickr -> create your own training set for machine learning tasks etc.
 
+
 ## Usage
 1. ```git clone https://github.com/peerdavid/datr/```
 2. Register on flickr and create an application: https://www.flickr.com/services/apps/create/apply/
@@ -10,8 +11,18 @@ Download image sets from flickr -> create your own training set for machine lear
 API_KEY =  'YOUR_KEY'
 API_SECRET = 'YOUR_SECRET'
 ```
+5. cd INSTALLATION_PATH
+6. python setup.py install --user
+8. 
+``` python
+import datr
 
-## Execute
+path = "downloads"
+search_tag = "car"
+datr.download(path, search_tag)
+```
+
+## Execute directly
 ```
 Usage: datr.py [options]
 
