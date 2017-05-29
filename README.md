@@ -6,14 +6,15 @@ Download image sets from flickr -> create your own training set for machine lear
 1. ```git clone https://github.com/peerdavid/datr/```
 2. Register on flickr and create an application: https://www.flickr.com/services/apps/create/apply/
 3. Copy the new API_Key and API_SECRET.
-4. Create a flickr_keys.py file (into the cloned dir) with the following content:<br>
-``` python
-API_KEY =  'YOUR_KEY'
-API_SECRET = 'YOUR_SECRET'
+4. Create a file .datr in your home directory (into the cloned dir) with the following content:<br>
+```
+[Settings]
+API_KEY =  YOUR_KEY
+API_SECRET = YOUR_SECRET
 ```
 5. cd INSTALLATION_PATH
 6. python setup.py install --user
-8. 
+7. Use datr in your own application with:
 ``` python
 import datr
 
@@ -23,6 +24,7 @@ datr.download(path, search_tag)
 ```
 
 ## Execute directly
+It is also possible, to call *python datr.py*:
 ```
 Usage: datr.py [options]
 

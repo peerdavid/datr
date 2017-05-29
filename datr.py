@@ -8,13 +8,14 @@
 
 import sys
 import os
-import flickr_api as f
+import flickr_api
 from flickr_api import Walker
 import urllib
 from Queue import Queue
 from threading import Thread
 from optparse import OptionParser
 import time
+import ConfigParser
 
 
 def _parse_cmd_args():
@@ -93,7 +94,7 @@ def _save_print(content):
     
 def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, max_num_img, image_size):
     print "Downloading images for search tags {0} and license {1}.".format(search_tags, license)
-    walker = Walker(f.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
+    walker = Walker(flickr_api.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
@@ -110,7 +111,7 @@ def _fill_worker_queue_with_tagged_images(worker_queue, search_tags, license, ma
 
 def _fill_worker_queue_with_free_text_images(worker_queue, search_text, license, max_num_img, image_size):
     print "Downloading images for free text {0} and license {1}.".format(search_text, license)
-    walker = Walker(f.Photo.search, text=search_text, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
+    walker = Walker(flickr_api.Photo.search, text=search_text, tag_mode='all', extras='url_'+image_size, license=license, sort='relevance')
     
     # Insert all images into worker queue
     # Note: Loop finished if no more images on flickr or > max_num_img
@@ -145,8 +146,6 @@ def download(path, search_tags, use_free_text=False, license="", max_num_img=100
     num_img = 0
     try :
         worker_queue = Queue(max_num_img + 1)
-        _init_download_folder(path)
-        _init_downloader_threads(worker_queue, path, image_size, num_threads)
 
         # Fill and wait for queue
         start_time = time.time()
@@ -156,6 +155,12 @@ def download(path, search_tags, use_free_text=False, license="", max_num_img=100
         if use_free_text and num_img < max_num_img: 
             num_img += _fill_worker_queue_with_free_text_images(worker_queue, search_tags, license, max_num_img - num_img, image_size)
         
+        print "#############################################"
+
+        # Start all downloader threads
+        _init_download_folder(path)
+        _init_downloader_threads(worker_queue, path, image_size, num_threads)
+
         # Wait until all images downloaded
         _wait_for_downloader_threads(worker_queue)
         end_time = time.time()
@@ -177,7 +182,22 @@ def download(path, search_tags, use_free_text=False, license="", max_num_img=100
 #
 # MAIN
 #    
-if __name__ == '__main__':
+def main():
+    # Load and set configuration
+    try:
+        cfg = ConfigParser.RawConfigParser()
+        cfg.read(os.path.expanduser('~/.datr'))       # Read file
+
+        api_key = cfg.get("Settings", "API_KEY")
+        api_secret = cfg.get("Settings", "API_SECRET")
+
+    except:
+        print "Could not find config file '~/.datr' with API_KEY and API_SECRET"
+        return
+
+    flickr_api.set_keys(api_key, api_secret)
+
+    # Run datr with cmd options
     options = _parse_cmd_args()
     download(
         options.path,
@@ -188,3 +208,7 @@ if __name__ == '__main__':
         options.num_threads,
         options.image_size
     )
+
+
+if __name__ == '__main__':
+    main()
