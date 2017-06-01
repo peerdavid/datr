@@ -106,8 +106,6 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
 
             min_upload_date = "{0}-{1}-01".format(year, month-1)
             max_upload_date = "{0}-{1}-01".format(year, month)
-            print min_upload_date
-            print max_upload_date
 
             walker = Walker(flickr_api.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, 
                 license=license, sort='relevance', min_upload_date=min_upload_date, max_upload_date=max_upload_date)
