@@ -43,7 +43,7 @@ def download(path, search_tags, license="", max_num_img=100, num_threads=15, ima
 
         worker_queue = Queue(max_num_img + 1)
         num_img = _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_size)  
-        print "#############################################\n"
+        print "#############################################"
 
         # Start all downloader threads
         _init_download_folder(path)

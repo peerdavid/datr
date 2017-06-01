@@ -56,17 +56,18 @@ The following command will download 50 (Public Domain Dedication (CC0) license) 
 To speed up the download we start 20 downloader threads.<br>
 
 ```
-user@ubuntu:~/Dev/datr$ python datr.py --num_images 50 --search_tags car --license 9 --num_threads 20
+user@ubuntu:~/Dev/datr$ python datr.py --num_images 50 --search_tags cat --license 9 --num_threads 20
+#############################################
+Authenticate user on flickr.
+Downloading images for search tags cat and license .
+Filled downloader queue with 500 tagged images.                        
+
+#############################################
 Starting 20 downloader threads
-Downloading images for search tags car and license 9.
+  Downloading images ... 100%
+Finished image download after 37.45 sec.
+Successfully downloaded 500 images.
 
-Downloaded image download/28048280xxx.jpg | Title = '...' | License = 9
-Downloaded image download/28152122xxx.jpg | Title = '...' | License = 9
-Downloaded image download/27870814xxx.jpg | Title = '...' | License = 9
-[...]
-Downloaded image download/28048283xxx.jpg | Title = '...' | License = 9
-
-Finished image download after 6.88 sec.
 
 ```
 
