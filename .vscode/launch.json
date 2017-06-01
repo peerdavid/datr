@@ -7,7 +7,7 @@
 			"request": "launch",
 			"stopOnEntry": false,
 			"program": "${workspaceRoot}/datr.py",
-			"args": ["-n", "50", "-s", "car, funny", "-f", "-i", "l"],
+			"args": ["-n", "7000", "-s", "cat, dog", "-i", "l"],
 			"pythonPath": "/usr/bin/python2",
 			//"args":["-h"],
 			"debugOptions": [

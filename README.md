@@ -35,8 +35,6 @@ Options:
                         moreof the tags listed will be returned. You can
                         exclude results that match a term by prepending itwith
                         a - character.
-  -f, --use-free-text   Use free text search, if not enough images are
-                        available
   -t NUM_THREADS, --num_threads=NUM_THREADS
                         Number of downloader threads (speed up download)
   -p PATH, --path=PATH  Path where downloaded files should be saved
