@@ -93,7 +93,7 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
     Note: The flickr api returns the same id, if the number of search results > 4000.
     Therefore we search for every year. \sa https://stackoverflow.com/questions/1994037/flickr-api-returning-duplicate-photos
     """
-    print "Downloading images for search tags {0} and license {1}.".format(search_tags, license)
+    print "Downloading images for search tags '{0}' and license '{1}'.".format(search_tags, license)
 
     now = datetime.datetime.now()
     num_img = 0
@@ -102,7 +102,7 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
     for year in range(2000, now.year):
         if num_img >= max_num_img:
                 break
-                
+
         min_upload_date = "{0}-01-01".format(year)
         max_upload_date = "{0}-01-01".format(year+1)
 
