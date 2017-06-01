@@ -112,12 +112,17 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
             
             # Insert all images into worker queue
             # Note: Loop finished if no more images on flickr or > max_num_img
+            # or when lots of errors are produced for this month. In the last case we try 
+            # the next month...
+            error_counter = 0
             for img in walker:       
-                if num_img >= max_num_img:
+                if num_img >= max_num_img or error_counter > 200:
                     break
 
                 img_id = "{0}_{1}".format(img.id, img.server)
-                if(img_id not in already_added):
+                if(img_id in already_added):
+                    error_counter += 1
+                else:
                     worker_queue.put(img)
                     already_added.append(img_id)
 
