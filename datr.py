@@ -99,30 +99,33 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
     num_img = 0
     already_added = []
     
-    for year in range(2000, now.year):
-        if num_img >= max_num_img:
-                break
-
-        min_upload_date = "{0}-01-01".format(year)
-        max_upload_date = "{0}-01-01".format(year+1)
-
-        walker = Walker(flickr_api.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, 
-            license=license, sort='relevance', min_upload_date=min_upload_date, max_upload_date=max_upload_date)
-        
-        # Insert all images into worker queue
-        # Note: Loop finished if no more images on flickr or > max_num_img
-        for img in walker:       
+    for year in range(now.year, 2000, -1):
+        for month in range(12, 2, -1):
             if num_img >= max_num_img:
-                break
+                    break
 
-            img_id = "{0}_{1}".format(img.id, img.server)
-            if(img_id not in already_added):
-                worker_queue.put(img)
-                already_added.append(img_id)
+            min_upload_date = "{0}-{1}-01".format(year, month-1)
+            max_upload_date = "{0}-{1}-01".format(year, month)
+            print min_upload_date
+            print max_upload_date
 
-                num_img += 1
-                sys.stdout.write("  Searching on flickr for images ... %d%%\r" % (num_img * 100 / max_num_img))
-                sys.stdout.flush()
+            walker = Walker(flickr_api.Photo.search, tags=search_tags, tag_mode='all', extras='url_'+image_size, 
+                license=license, sort='relevance', min_upload_date=min_upload_date, max_upload_date=max_upload_date)
+            
+            # Insert all images into worker queue
+            # Note: Loop finished if no more images on flickr or > max_num_img
+            for img in walker:       
+                if num_img >= max_num_img:
+                    break
+
+                img_id = "{0}_{1}".format(img.id, img.server)
+                if(img_id not in already_added):
+                    worker_queue.put(img)
+                    already_added.append(img_id)
+
+                    num_img += 1
+                    sys.stdout.write("  Searching on flickr for images ... %d%%\r" % (num_img * 100 / max_num_img))
+                    sys.stdout.flush()
 
     print "Filled downloader queue with {0} tagged images.                        \n".format(num_img)
     return num_img
