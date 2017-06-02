@@ -19,7 +19,6 @@ import datetime
 import ConfigParser
 
 
-
 def download(path, search_tags, license="", max_num_img=100, num_threads=15, image_size="s"):
     """ Download images from flickr. Needs a flickr_keys.py file in your execution path.
 
@@ -36,35 +35,27 @@ def download(path, search_tags, license="", max_num_img=100, num_threads=15, ima
     num_img = 0
     start_time = time.time()
     
-    try :
-        # Initialize and fill queue
-        print "\n#############################################"
-        _authenticate()
+    # Initialize and fill queue
+    print "\n#############################################"
+    _authenticate()
 
-        worker_queue = Queue(max_num_img + 1)
-        num_img = _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_size)  
-        print "#############################################"
+    worker_queue = Queue(max_num_img + 1)
+    num_img = _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_size)  
+    print "#############################################"
 
-        # Start all downloader threads
-        _init_download_folder(path)
-        _init_downloader_threads(worker_queue, path, image_size, num_threads, max_num_img)
+    # Start all downloader threads
+    _init_download_folder(path)
+    _init_downloader_threads(worker_queue, path, image_size, num_threads, max_num_img)
 
-        # Wait until all images downloaded
-        worker_queue.join()
-        end_time = time.time()
+    # Wait until all images downloaded
+    worker_queue.join()
+    end_time = time.time()
 
-        # Print result
-        print "\nFinished image download after {0:.2f} sec.".format(end_time - start_time)
-        print "Successfully downloaded {0} images.\n".format(num_img)   
+    # Print result
+    print "\nFinished image download after {0:.2f} sec.".format(end_time - start_time)
+    print "Successfully downloaded {0} images.\n".format(num_img)   
 
-    except SystemExit:
-        print ""
-        
-    except Exception, e:
-        sys.stderr.write("An unexpected error occured: {0}".format(e))
-    
-    finally:
-        return num_img
+    return num_img
 
 
 def _authenticate():
@@ -115,20 +106,23 @@ def _fill_worker_queue(worker_queue, search_tags, license, max_num_img, image_si
             # or when lots of errors are produced for this month. In the last case we try 
             # the next month...
             error_counter = 0
-            for img in walker:       
-                if num_img >= max_num_img or error_counter > 200:
-                    break
+            try:
+                for img in walker:       
+                    if num_img >= max_num_img or error_counter > 200:
+                        break
 
-                img_id = "{0}_{1}".format(img.id, img.server)
-                if(img_id in already_added):
-                    error_counter += 1
-                else:
-                    worker_queue.put(img)
-                    already_added.append(img_id)
+                    img_id = "{0}_{1}".format(img.id, img.server)
+                    if(img_id in already_added):
+                        error_counter += 1
+                    else:
+                        worker_queue.put(img)
+                        already_added.append(img_id)
 
-                    num_img += 1
-                    sys.stdout.write("  Searching on flickr for images ... %d%%\r" % (num_img * 100 / max_num_img))
-                    sys.stdout.flush()
+                        num_img += 1
+                        sys.stdout.write("  Searching on flickr for images ... %d%%\r" % (num_img * 100 / max_num_img))
+                        sys.stdout.flush()
+            except:
+                print "ERROR | Could not walk through date {0} - {1}".format(min_upload_date, max_upload_date)
 
     print "Filled downloader queue with {0} tagged images.                        \n".format(num_img)
     return num_img
@@ -169,6 +163,8 @@ def _download_image(worker_queue, path, image_size, max_num_img):
 
         finally:
             worker_queue.task_done()   
+
+
 
 
 #
